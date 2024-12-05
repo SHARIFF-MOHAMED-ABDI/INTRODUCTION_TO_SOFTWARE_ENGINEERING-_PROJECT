@@ -1,0 +1,105 @@
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    min-height: 150vh;
+    background: #f3f3f3;
+    font-family: Arial, sans-serif;
+    margin: 0;
+}
+
+#content {
+    width: 80%;
+    max-width: 1200px;
+    background-color: #fff;
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    padding: 20px;
+    margin-top: 20px;
+}
+
+.header-wrapper {
+    width: 100%;
+}
+
+.header-strip-top, .header-strip-bottom {
+    background-color: #090568;
+    height: 15px;
+    width: 100%;
+}
+
+header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #FFD700;
+    color: #13115c;
+    text-align: center;
+    padding: 15px;
+    font-weight: bold;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 2.5em;
+    flex-grow: 1;
+    text-align: center;
+}
+
+.usiu-logo {
+    width: 180px;
+    height: 110px;
+    margin: 10px;
+}
+
+nav {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    padding: 10px 0;
+    font-size: 1.1em;
+}
+
+nav a {
+    color: #f9f9f9;
+    text-decoration: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    background-color: #090568;
+}
+
+nav a:hover {
+    background-color: #00509e;
+}
+
+section {
+    padding: 30px 0;
+    text-align: center;
+}
+
+.hidden { 
+    display: none; 
+}
+
+.cart-container {
+    width: 350px;
+    max-width: 90%;
+    margin: 0 auto;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+footer {
+    text-align: center;
+    padding: 15px;
+    background-color: #FFD700;
+    color: #090568;
+    width: 100%;
+    border-radius: 0 0 10px 10px;
+    font-size: 1.3em;
+    margin-top: 20px;
+}

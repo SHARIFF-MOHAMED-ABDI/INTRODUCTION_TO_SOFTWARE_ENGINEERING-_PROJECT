@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>USIU Food Ordering System</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            min-height: 150vh;
+            background: #f3f3f3;
+            font-family: Arial, sans-serif;
+            margin: 0;
+        }
+         
+        #content {
+            width: 80%;
+            max-width: 1200px;
+            background-color: #fff;
+            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .header-wrapper {
+            width: 100%;
+        }
+
+        .header-strip-top, .header-strip-bottom {
+            background-color: #090568;
+            height: 15px;
+            width: 100%;
+        }
+
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #FFD700;
+            color: #13115c;
+            text-align: center;
+            padding: 15px;
+            font-weight: bold;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.5em;
+            flex-grow: 1;
+            text-align: center;
+        }
+
+        .usiu-logo {
+            width: 180px;
+            height: 110px;
+            margin: 10px;
+        }
+
+        nav {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            padding: 10px 0;
+            font-size: 1.1em;
+        }
+
+        nav a {
+            color: #f9f9f9;
+            text-decoration: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            background-color: #090568;
+        }
+
+        nav a:hover {
+            background-color: #00509e;
+        }
+
+        section {
+            padding: 30px 0;
+            text-align: center;
+        }
+
+        .menu-items {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .food-item {
+            width: 20%;
+            text-align: center;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 10px;
+            font-size: 1em;
+        }
+
+        .food-item img {
+            width: 200px;
+            height: 200px;
+            border-radius: 10px;
+        }
+
+        button {
+            padding: 10px;
+            margin: 10px auto;
+            background-color: #090568;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1em;
+            width: auto;
+            transition: background-color 0.2s ease;
+        }
+
+        button:active {
+            background-color: #070444;
+        }
+
+        .hidden { display: none; }
+
+        footer {
+            text-align: center;
+            padding: 15px;
+            background-color: #FFD700;
+            color: #090568;
+            width: 100%;
+            border-radius: 0 0 10px 10px;
+            font-size: 1.3em;
+            margin-top: 20px;
+        }
+
+        #receipt {
+            width: 300px;
+            max-width: 90%;
+            margin: 20px auto;
+            background-color: #fff;
+            border: 2px solid #090568;
+            padding: 20px;
+            font-size: 0.9em;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            text-align: left;
+            color: #13115c;
+        }
+
+        #receiptHeader, #receiptFooter {
+            text-align: center;
+            font-weight: bold;
+            margin: 10px 0;
+            color: #090568;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px dashed #ddd;
+            padding: 10px;
+            font-size: 1em;
+        }
+
+        .cart-item p {
+            margin: 0;
+        }
+
+        .cart-container {
+            width: 350px;
+            max-width: 90%;
+            margin: 0 auto;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #090568;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+            font-size: 1em;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
+        }
+
+        .notification.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .payment-details, .payment-details input {
+            font-size: 1em;
+            padding: 8px;
+            margin: 5px;
+        }
+
+        .delivery-location select {
+            padding: 8px;
+            font-size: 1em;
+        }
+
+        /* Cart Icon */
+        #cartSection h2 {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        #cartIcon {
+            font-size: 1.5em;
+            color: #090568;
+            width: 1.5em;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <div class="header-wrapper">
+        <div class="header-strip-top"></div>
+        <header>
+            <img src="USIU LOGO.png" alt="USIU Logo" class="usiu-logo">
+            <h1>USIU ONLINE FOOD ORDERING SYSTEM</h1>
+            <img src="USIU LOGO.png" alt="USIU Logo" class="usiu-logo">
+        </header>
+        <div class="header-strip-bottom"></div>
+    </div>
+
+    <nav>
+        <a href="javascript:void(0)" id="homeBtn" onclick="showSection('homeSection')">Home</a>
+        <a href="javascript:void(0)" id="menuBtn" onclick="showSection('menuSection')">Menu</a>
+        <a href="javascript:void(0)" id="cartBtn" onclick="showSection('cartSection')">Cart</a>
+        <a href="javascript:void(0)" id="contactBtn" onclick="showSection('contactSection')">Contact Us</a>
+    </nav>
+
+    <div id="content">
+        <section id="homeSection">
+            <h2>Welcome to the USIU Online Food Ordering System</h2>
+            <p>Order food from your favorite USIU campus spots and enjoy quick and convenient delivery options!</p>
+            <img src="MEAT.jpeg" alt="Campus Food">
+            <img src="Full Dish.jpeg" alt="Campus Food">
+            <img src="DRINKS.jpeg" alt="Campus Food">
+            <img src="JUICES.jpeg" alt="Campus Food">
+            <h3> Kindly View our Menu 👆👆👆👆</h3>
+        </section>
+        <!-- Menu Section with All Food Items -->
+        <section id="menuSection" class="hidden">
+            <h2>Our Menu</h2>
+            <!-- Breakfast -->          
+            <h3>Breakfast</h3>
+            <div class="menu-items">
+                <div class="food-item"><img src="pancake.jpg" alt="Pancakes"><h4>Pancakes</h4><p>Price: Ksh 50</p><button onclick="addToCart('Pancakes', 50)">Add to Cart</button></div>
+                <div class="food-item"><img src="Mshikaki.jpeg" alt="Mshikaki"><h4>Mshikaki</h4><p>Price: Ksh 80</p><button onclick="addToCart('Mshikaki', 70)" >Add to Cart</button></div>
+                <div class="food-item"><img src="Omellata.jpg" alt="Omelette"><h4>Omelette</h4><p>Price: Ksh 70</p><button onclick="addToCart('Omelette', 70)">Add to Cart</button></div>
+                <div class="food-item"><img src="Porridge.jpg" alt="Porridge"><h4>Porridge</h4><p>Price: Ksh 30</p><button onclick="addToCart('Porridge', 30)">Add to Cart</button></div>
+                <div class="food-item"><img src="Fremch Toast.jpg" alt="Fremch Toast"><h4>Fremch Toast</h4><p>Price: Ksh 30</p><button onclick="addToCart('Porridge', 30)">Add to Cart</button></div>
+                <div class="food-item"><img src="Boiled Egg.jpg" alt="Boiled Egg"><h4>Boiled Egg</h4><p>Price: Ksh 50</p><button onclick="addToCart('Scramble Egg', 30)">Add to Cart</button></div>
+                <div class="food-item"><img src="Samosa.jpg" alt="Samosa"><h4>Samosa</h4><p>Price: Ksh 40</p><button onclick="addToCart('Samosa', 70)" >Add to Cart</button></div>
+                <div class="food-item"><img src="Waffles.jpg" alt="Wafles"><h4>Wafles</h4><p>Price: Ksh 80</p><button onclick="addToCart('Waffles', 70)" >Add to Cart</button></div>
+                <div class="food-item"><img src="Sausage.jpg" alt="Sausage"><h4>Sausage</h4><p>Price: Ksh 80</p><button onclick="addToCart('Sausage', 70)" >Add to Cart</button></div>
+                <div class="food-item"><img src="Avocado.jpg" alt="Avocado Toast"><h4>Avocado Toast</h4><p>Price: Ksh 80</p><button onclick="addToCart('Avocado Toast', 70)" >Add to Cart</button></div>
+                <div class="food-item"><img src="Smoothie.jpg" alt="Smoothies"><h4>Smoothies</h4><p>Price: Ksh 80</p><button onclick="addToCart('Smoothie', 70)" >Add to Cart</button></div>
+                <div class="food-item"><img src="Mandazi.jpeg" alt="Mandazi"><h4>Mandazi</h4><p>Price: Ksh 80</p><button onclick="addToCart('Mandazi', 70)" >Add to Cart</button></div>
+                <div class="food-item"><img src="Bhajia.jpeg" alt="Bhajia"><h4>Bhajia</h4><p>Price: Ksh 70</p><button onclick="addToCart('Bhajia', 70)" >Add to Cart</button></div>
+                <div class="food-item"><img src="Chapati.jpeg" alt="Chapati"><h4>Chapati</h4><p>Price: Ksh 80</p><button onclick="addToCart('Chapati', 70)" >Add to Cart</button></div>
+                <div class="food-item"><img src="Mayai.jpeg" alt="mAYAI"><h4>Mayai</h4><p>Price: Ksh 80</p><button onclick="addToCart('Mayai', 70)" >Add to Cart</button></div>
+                <div class="food-item"><img src="Kachumbari.jpeg" alt="Kachumbari"><h4>Kachumbari</h4><p>Price: Ksh 70</p><button onclick="addToCart('Kachumbari', 70)" >Add to Cart</button></div>
+            </div>
+            <!-- Lunch -->
+            <h3>Lunch</h3>
+            <div class="menu-items">
+                <div class="food-item"><img src="Ugali.jpeg" alt="Ugali and Sukuma"><h4>Ugali and Sukuma</h4><p>Price: Ksh 100</p><button onclick="addToCart('Ugali and Sukuma', 100)">Add to Cart</button></div>
+                <div class="food-item"><img src="beef stew.jpeg" alt="Beef Stew"><h4>Beef stew</h4><p>Price: Ksh 170</p><button onclick="addToCart('Beef Stew', 80)">Add to Cart</button></div>
+                <div class="food-item"><img src="pilau with kachumbari.jpeg" alt="pilau with kachumbari"><h4>pilau with kachumbari</h4><p>Price: Ksh 60</p><button onclick="addToCart('pilau with kachumbarih', 60)">Add to Cart</button></div>
+                <div class="food-item"><img src="Chapti with Kachumburi.jpeg" alt="Chapti with Kachumburi"><h4>Chapti with Kachumburi</h4><p>Price: Ksh 80</p><button onclick="addToCart('Chapti with Kachumburi', 80)">Add to Cart</button></div>
+                <div class="food-item"><img src="Githeri.jpeg" alt="Githeri"><h4>Githeri</h4><p>Price: Ksh 180</p><button onclick="addToCart('Githeri', 80)">Add to Cart</button></div>
+                <div class="food-item"><img src="Matoke.jpeg" alt="Matoke"><h4>Matoke</h4><p>Price: Ksh 150</p><button onclick="addToCart('Matoke', 80)">Add to Cart</button></div>
+                <div class="food-item"><img src="Vegetable Rice.jpeg" alt="Vegetable Rice"><h4>Vegetable Rice</h4><p>Price: Ksh 210</p><button onclick="addToCart('Vegetable Rice', 80)">Add to Cart</button></div>
+                <div class="food-item"><img src="Rice Chicken.jpeg" alt="Rice Chicken "><h4>Rice Chicken </h4><p>Price: Ksh 230</p><button onclick="addToCart('Rice Chicken ', 80)">Add to Cart</button></div>
+                <div class="food-item"><img src="Fried Chicken.jpeg" alt="Fried Chicken"><h4>Fried Chicken</h4><p>Price: Ksh 300</p><button onclick="addToCart('Fried Chicken', 80)">Add to Cart</button></div>
+                <div class="food-item"><img src="Cooked Fish.jpeg" alt="Cooked Fish"><h4>Cooked Fish</h4><p>Price: Ksh 80</p><button onclick="addToCart('Cooked Fish', 80)">Add to Cart</button></div>
+                <div class="food-item"><img src="Rice Beans.jpeg" alt="Rice Beans"><h4>Rice Beans</h4><p>Price: Ksh 180</p><button onclick="addToCart('Rice Beans', 80)">Add to Cart</button></div>
+                <div class="food-item"><img src="Fried Fish.jpeg" alt="Fried Fish"><h4>Fried Fish</h4><p>Price: Ksh 450</p><button onclick="addToCart('Fried Fish', 80)">Add to Cart</button></div>
+                <div class="food-item"><img src="Shawarma.jpeg" alt="Shawarma"><h4>Shawarma</h4><p>Price: Ksh 180</p><button onclick="addToCart('Shawarma', 80)">Add to Cart</button></div>
+                <div class="food-item"><img src="chicken Tikka.jpeg" alt="chicken Tikka"><h4>chicken Tikka</h4><p>Price: Ksh 380</p><button onclick="addToCart('chicken Tikka', 80)">Add to Cart</button></div>
+                <div class="food-item"><img src="Goat Stew.jpeg" alt="Goat Stew"><h4>Goat Stew</h4><p>Price: Ksh 250</p><button onclick="addToCart('Goat Stew', 80)">Add to Cart</button></div>
+                <div class="food-item"><img src="Liver Stew.jpeg" alt="Liver Stew"><h4>Liver Stew</h4><p>Price: Ksh 280</p><button onclick="addToCart('Liver Stew', 80)">Add to Cart</button></div>
+                <div class="food-item"><img src="Gizard.jpeg" alt="Gizard"><h4>Gizard</h4><p>Price: Ksh 125</p><button onclick="addToCart('Gizard', 80)">Add to Cart</button></div>
+                <div class="food-item"><img src="Pizza.jpeg" alt="Pizza"><h4>Pizza</h4><p>Price: Ksh 480</p><button onclick="addToCart('Pizza', 80)">Add to Cart</button></div>
+                <div class="food-item"><img src="Lentils.jpeg" alt="Lentils"><h4>Lentils</h4><p>Price: Ksh 55</p><button onclick="addToCart('Lentils', 80)">Add to Cart</button></div>
+                <div class="food-item"><img src="Chips.jpeg" alt="Chips"><h4>Chips</h4><p>Price: Ksh 75</p><button onclick="addToCart('Chips', 80)">Add to Cart</button></div>
+            </div>
+            <!-- Dinner -->
+            <h3>Dinner</h3>
+            <div class="menu-items">
+                <div class="food-item"><img src="Italian pasta.jpeg" alt="Italian pasta"><h4>Italian pasta</h4><p>Price: Ksh 150</p><button onclick="addToCart('Italian pasta', 150)">Add to Cart</button></div>
+                <div class="food-item"><img src="Salmon Fish.jpeg" alt="Salmon Fish"><h4>Salmon Fish</h4><p>Price: Ksh 420</p><button onclick="addToCart('Salmon Fish', 120)">Add to Cart</button></div>
+                <div class="food-item"><img src="meat Buffet.jpeg" alt="meat Buffet"><h4>meat Buffet</h4><p>Price: Ksh 340</p><button onclick="addToCart('meat Buffet', 140)">Add to Cart</button></div>
+                <div class="food-item"><img src="Caesar Salad.jpeg" alt="Caesar Salad "><h4>Caesar Salad </h4><p>Price: Ksh 140</p><button onclick="addToCart('popcorn', 140)">Add to Cart</button></div>
+            </div>
+            <!-- Beverages -->
+            <h3>Beverages</h3>
+            <div class="menu-items">
+                <div class="food-item"><img src="coffee.JPG" alt="Coffee"><h4>Coffee</h4><p>Price: Ksh 70</p><button onclick="addToCart('Coffee', 20)">Add to Cart</button></div>
+                <div class="food-item"><img src="Tea.jpeg" alt="Tea"><h4>Tea</h4><p>Price: Ksh 65</p><button onclick="addToCart('Tea', 15)">Add to Cart</button></div>
+                <div class="food-item"><img src="Juice.jpeg" alt="Juice"><h4>Juice</h4><p>Price: Ksh 145</p><button onclick="addToCart('Juice', 25)">Add to Cart</button></div>
+                <div class="food-item"><img src="StrawBerry.jpeg" alt="StrawBerry"><h4>StrawBerry</h4><p>Price: Ksh 145</p><button onclick="addToCart('Lemon Juice', 25)">Add to Cart</button></div>
+                <div class="food-item"><img src="Lemon juice.jpeg" alt="Lemon juice"><h4>Lemon juice</h4><p>Price: Ksh 135</p><button onclick="addToCart('Lemon Juice', 25)">Add to Cart</button></div>
+               <div class="food-item"><img src="Mango Juice.jpeg" alt="Mango Juice"><h4>Mango Juice</h4><p>Price: Ksh 125</p><button onclick="addToCart('Mango Juice', 25)">Add to Cart</button></div>
+                <div class="food-item"><img src="Apple juice.jpeg" alt="Apple juice"><h4>Apple juice</h4><p>Price: Ksh 135</p><button onclick="addToCart('Apple juice', 25)">Add to Cart</button></div>
+                <div class="food-item"><img src="cocktail juice.jpeg" alt="cocktail juice"><h4>cocktail juice</h4><p>Price: Ksh 145</p><button onclick="addToCart('cocktail juice', 25)">Add to Cart</button></div>
+            <!-- View Cart Button -->
+            <button onclick="showSection('cartSection')">View Your Cart</button>
+        </section>
+
+        
+        <!-- Cart Section -->
+        <section id="cartSection" class="hidden">
+            <h2><span id="cartIcon">🛒</span>Your Cart</h2>
+            <div class="cart-container">
+                <div id="cartItems"></div>
+                <button onclick="showPaymentOptions()">Proceed to Payment</button>
+            </div>
+        </section>
+
+        <!-- Payment Section -->
+        <section id="paymentSection" class="hidden">
+            <h2>Choose Payment Method</h2>
+            <label><input type="radio" name="payment" value="visa Card" onclick="showPaymentDetails('visa')"> VISA Card</label><br>
+            <label><input type="radio" name="payment" value="mpesa" onclick="showPaymentDetails('mpesa')"> Mpesa</label><br>
+            <label><input type="radio" name="payment" value="student id" onclick="showPaymentDetails('student')"> USIU Student ID</label><br>
+            
+            <div id="paymentDetails" class="payment-details hidden">
+                <div id="visaDetails" class="hidden">
+                    <input type="text" placeholder="Card Number" id="cardNumber" required><br>
+                    <input type="text" placeholder="Expiry Date (MM/YY)" id="expiryDate" required><br>
+                    <input type="text" placeholder="CVV" id="cvv" required><br>
+                    <button onclick="processPayment('visa')">Submit Payment</button>
+                </div>
+                
+                <div id="mpesaDetails" class="hidden">
+                    <input type="text" placeholder="Phone Number" id="mpesaNumber" required><br>
+                    <button onclick="processPayment('mpesa')">Proceed with Mpesa Payment</button>
+                </div>
+                
+                <div id="studentDetails" class="hidden">
+                    <input type="text" placeholder="Student ID Number" id="studentID" required><br>
+                    <input type="text" placeholder="Full Name" id="fullName" required><br>
+                    <button onclick="processPayment('student')">Submit Payment</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Receipt Section -->
+        <section id="receiptSection" class="hidden">
+            <div id="receipt">
+                <div id="receiptHeader">USIU Online Food Ordering Receipt</div>
+                <div class="receipt-divider"></div>
+                <div id="receiptItems"></div>
+                <div class="receipt-divider"></div>
+                <div id="receiptFooter">Payment Successful. Thank you for dining with us!</div>
+            </div>
+            <button onclick="showSection('deliveryOptions')">Continue to Delivery Options</button>
+        </section>
+
+        <!-- Delivery or Pickup Section -->
+        <section id="deliveryOptions" class="hidden">
+            <h3>Delivery or Pickup</h3>
+            <p>Select your preferred option:</p>
+            <button onclick="selectDeliveryOption('pickup')">Pickup</button>
+            <button onclick="selectDeliveryOption('delivery')">Delivery</button>
+
+            <div class="delivery-location hidden" id="deliveryLocationSection">
+                <h3>Select Delivery Location</h3>
+                <select id="deliveryLocation">
+                                       <option value="The Chandaria School of Business (CSOB)">The Chandaria School of Business (CSOB)</option>
+                    <option value="The School of Science & Technology (SST)">The School of Science & Technology (SST)</option>
+                    <option value="The School of Humanities & Social Sciences (SHSS)">The School of Humanities & Social Sciences (SHSS)</option>
+                    <option value="The School of Pharmacy & Health Sciences (SPHS)">The School of Pharmacy & Health Sciences (SPHS)</option>
+                    <option value="The School of Communication, Cinematic & Creative Arts (SCCCA)">The School of Communication, Cinematic & Creative Arts (SCCCA)</option>
+                    <option value="The Library">The Library</option>
+                    <option value="The Student Center">The Student Center</option>
+                    <option value="Hostels">Hostels</option>
+                    <option value="The Auditorium">The Auditorium</option>
+                    <option value="Masterscard Foundation and School of Graduate">Masterscard Foundation and School of Graduate</option>
+                    <option value="Freida Brown Student Center">Freida Brown Student Center</option>
+                </select>
+
+                    
+                    <!-- Additional locations -->
+                </select>
+                <button onclick="confirmOrder()">Confirm Delivery</button>
+            </div>
+        </section>
+    </div>
+    <section id="contactSection" class="hidden">
+        <h2>Contact Us</h2>
+        <p>If you have any issues or need assistance, feel free to reach out to us.</p>
+        <p>Email: <a href="mailto:support@usiu.edu">shmabdi@usiu.edu</a></p>
+        <p>Phone: +254-796 954 142</p>
+        <p>We are here to help and ensure you have a smooth ordering experience!</p>
+    </section>
+    <footer>
+        &copy; 2024 USIU Online Food Ordering System | Order food at your convenience
+    </footer>
+
+    <script>
+        let cart = [];
+        let customerName = "";
+
+        function showSection(sectionId) {
+            document.querySelectorAll("section").forEach(section => section.classList.add("hidden"));
+            document.getElementById(sectionId).classList.remove("hidden");
+        }
+
+        function addToCart(item, price) {
+            cart.push({ item, price });
+            updateCartDisplay();
+            showNotification("Item added to cart!");
+        }
+
+        function updateCartDisplay() {
+            const cartItems = document.getElementById("cartItems");
+            cartItems.innerHTML = cart.map((cartItem, index) => `
+                <div class="cart-item">
+                    <p>${cartItem.item}</p>
+                    <p>Ksh ${cartItem.price.toFixed(2)}</p>
+                    <button onclick="removeFromCart(${index})">Remove</button>
+                </div>
+            `).join("");
+            const total = cart.reduce((sum, cartItem) => sum + cartItem.price, 0);
+            cartItems.innerHTML += `<div class="cart-item"><strong>Total:</strong> Ksh ${total.toFixed(2)}</strong></div>`;
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            updateCartDisplay();
+        }
+
+        function showNotification(message) {
+            const notification = document.createElement("div");
+            notification.className = "notification show";
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            setTimeout(() => {
+                notification.classList.remove("show");
+                notification.remove();
+            }, 2000);
+        }
+
+        function showPaymentOptions() {
+            showSection("paymentSection");
+        }
+
+        function showPaymentDetails(method) {
+            document.getElementById("paymentDetails").classList.remove("hidden");
+            ["visaDetails", "mpesaDetails", "studentDetails"].forEach(id => document.getElementById(id).classList.add("hidden"));
+            document.getElementById(method + "Details").classList.remove("hidden");
+        }
+
+        function processPayment(method) {
+            if (method === "visa") {
+                const cardNumber = document.getElementById("cardNumber").value;
+                const expiryDate = document.getElementById("expiryDate").value;
+                const cvv = document.getElementById("cvv").value;
+                if (!cardNumber || !expiryDate || !cvv) {
+                    alert("Please fill in all VISA card details.");
+                    return;
+                }
+            } else if (method === "mpesa") {
+                const mpesaNumber = document.getElementById("mpesaNumber").value;
+                if (!mpesaNumber) {
+                    alert("Please enter your phone number.");
+                    return;
+                }
+                alert(`STK Push sent to ${mpesaNumber}! Enter your PIN on your phone to complete the payment.`);
+            } else if (method === "student") {
+                const studentID = document.getElementById("studentID").value;
+                const fullName = document.getElementById("fullName").value;
+                if (!studentID || !fullName) {
+                    alert("Please enter your Student ID and Full Name.");
+                    return;
+                }
+                localStorage.setItem('fullName', fullName);
+            }
+
+            alert("Payment Successful!");
+            const contactNumber = prompt("Please enter your active phone number:");
+            const initials = prompt("Please enter your initials for the signature:");
+            generateReceipt(localStorage.getItem('fullName') || "Customer", initials, contactNumber, method);
+        }
+
+        function generateReceipt(customerName, initials, contactNumber, paymentMethod) {
+            showSection("receiptSection");
+            const receiptItems = document.getElementById("receiptItems");
+            receiptItems.innerHTML = `
+                <div id="receiptHeader">
+                    <h3>USIU Online Food Ordering Receipt</h3>
+                    <p>USIU CAFE</p>
+                    <p>Thika Road, Nairobi, Kenya</p>
+                    <p>Order Date: ${new Date().toLocaleString()}</p>
+                    <div class="receipt-divider"></div>
+                </div>
+            `;
+            cart.forEach((item) => {
+                receiptItems.innerHTML += `<p>${item.item} ================== Ksh ${item.price.toFixed(2)}</p>`;
+            });
+            const total = cart.reduce((sum, item) => sum + item.price, 0);
+            receiptItems.innerHTML += `
+                <div class="receipt-divider"></div>
+                <p>Total: Ksh ${total.toFixed(2)}</p>
+                <p>Payment Method: ${paymentMethod.toUpperCase()}</p>
+                <p>Name: ${customerName}</p>
+                <p>Signature: ${initials}</p>
+                <p>Contact Number: ${contactNumber}</p>
+                <div class="receipt-divider"></div>
+                <div id="receiptFooter">Thank you for dining with us!</div>
+            `;
+        }
+
+        function selectDeliveryOption(option) {
+            if (option === "pickup") {
+                alert("Your order will be ready for pickup in 10 minutes.");
+                resetOrderPrompt();
+            } else {
+                document.getElementById("deliveryLocationSection").classList.remove("hidden");
+            }
+        }
+
+        function confirmOrder() {
+            const location = document.getElementById("deliveryLocation").value;
+            alert(`Your order will be delivered to: ${location}. Your delivery will arrive soon. Thank you for shopping with us!`);
+            resetOrderPrompt();
+        }
+
+        function resetOrderPrompt() {
+            const orderAgain = confirm("Would you like to place another order?");
+            if (orderAgain) {
+                cart = [];
+                updateCartDisplay();
+                showSection("menuSection");
+            } else {
+                alert("Thank you for using the USIU Online Food Ordering System!");
+                showSection("homeSection");
+            }
+        }
+    </script>
+</body>
+</html>
